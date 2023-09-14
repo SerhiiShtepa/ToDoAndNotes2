@@ -1,0 +1,20 @@
+﻿@page
+@model ToDoAndNotes2.Pages.Folders.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete folder";
+}
+
+<h1>Видалити папку та її вміст назавжди?</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-route-returnUrl="@Model?.ReturnUrl" asp-route-id="@Model?.Folder?.FolderId">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-folder fs-2"></i>
+                <div class="ms-2 fs-4">@Model.Folder.Name</div>
+            </div>
+            @await Html.PartialAsync("_OkCancelPartial")
+        </form>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@page
+@model CreateInFolderModel
+
+@{
+    ViewData["Title"] = "Create note";
+}
+
+<h1>Нова нотатка</h1>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-route-returnUrl="@Model?.ReturnUrl" asp-route-currentFolderId="@Model?.CurrentFolderId">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Note.FolderId" />
+            <input type="hidden" asp-for="Note.IsDeleted" />
+            <input type="hidden" asp-for="Note.CreatedAt" />
+
+            <div class="d-flex ps-3 align-items-center fs-5">
+                <i class="bi bi-folder fs-2"></i>
+                <div class="ms-3">@Model?.CurrentFolder?.Name</div>
+            </div>
+
+            <div class="d-flex flex-column ps-3 pe-3">
+                <textarea asp-for="Note.Title" oninput="auto_grow(this)" type="textarea"
+                          class="card-text form-control fs-4 mt-1" placeholder="Назва ..."></textarea>
+                <span asp-validation-for="Note.Title" class="text-danger"></span>
+
+                <textarea id="summernoteNew" asp-for="Note.Content" oninput="auto_grow(this)" type="textarea"
+                          class="card-text form-control fs-5 mt-1" placeholder="Опис ..."></textarea>
+                <span asp-validation-for="Note.Content" class="text-danger"></span>
+
+                @await Html.PartialAsync("_OkCancelPartial")
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

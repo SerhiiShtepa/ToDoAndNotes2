@@ -1,0 +1,22 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+
+<ul class="row list-unstyled fw-normal pb-1 small">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="d-inline-flex">
+            <a class="link-dark text-decoration-none rounded text-container" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">@User.Identity?.Name</a>
+        </li>
+        <li class="d-inline-flex">
+            <a class="link-dark text-decoration-none rounded text-container" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">Вийти</a>
+        </li>
+    }
+    else
+    {
+        <li class="d-inline-flex">
+            <a class="link-dark text-decoration-none rounded text-container" asp-area="Identity" asp-page="/Account/Register">Реєстрація</a>
+        </li>
+        <li class="d-inline-flex">
+            <a class="link-dark text-decoration-none rounded text-container" asp-area="Identity" asp-page="/Account/Login">Вхід</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,135 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+@section ButtonsRow {
+    <div class="ps-0 ms-3">
+        <form method="get" asp-page="/Tasks/CreateInFolder" class="d-inline">
+            <input type="hidden" class="returnUrlInput" name="returnUrl" />
+            <input type="hidden" name="currentFolderId" value="@Model.CurrentFolderId" />
+            <button type="submit" class="btn btn-primary fs-5">+Задача</button>
+        </form>
+        <form method="get" asp-page="/Notes/CreateInFolder" class="d-inline">
+            <input type="hidden" class="returnUrlInput" name="returnUrl" />
+            <input type="hidden" name="currentFolderId" value="@Model.CurrentFolderId" />
+            <button type="submit" class="btn btn-primary fs-5">+Нотатка</button>
+        </form>
+    </div>
+}
+
+@section Sidebar {
+    @await Html.PartialAsync("_SidebarPartial", Model.SidebarData)
+}
+
+<div class="row mt-2 gx-1">
+    <div class="col-lg-6 col-12">
+        <div class="card-group">
+            <div class="row row-cols-1 g-1 ms-0 w-100 ps-1 pe-1">
+                @if (Model.Tasks != null)
+                {
+                    foreach (var task in Model.Tasks)
+                    {
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body row">
+                                    <div class="col-xxl-6 col-7 ard-title d-inline-flex align-items-center">
+                                        <form method="post" asp-page="Tasks/Edit" asp-page-handler="ChangeState" asp-route-taskIdChangeState="@task.TaskId" id="checkboxForm-@task.TaskId">
+                                            <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                            <input asp-for="@task.IsCompleted" class="form-check-input fs-2" type="checkbox">
+                                        </form>
+                                        <div class="ms-2 text-container">
+                                            <form method="get" asp-page="Tasks/Edit">
+                                                <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                                <input type="hidden" name="id" value="@task.TaskId" />
+                                                <button type="submit" class="btn text-container fs-5 fw-bold text-decoration-none ps-0 w-100 d-flex justify-content-start">@task.Title</button>
+                                            </form>
+                                            <p class="card-text text-container">
+                                                @task.Description
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xxl-6 col-5 row mx-0">
+                                        @if (Model.CurrentFolderId == null)
+                                        {
+                                            <div class="d-xxl-block d-none col-xxl-6">
+                                                <i class="bi bi-folder fs-3"></i>
+                                                <div class="text-container ms-2">@task?.Folder?.Name</div>
+                                            </div>
+                                        }
+                                        <div class="col-xxl-6 col-12 d-flex align-items-center justify-content-end">
+                                            <form method="get" asp-page="Tasks/MoveTo">
+                                                <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                                <input type="hidden" name="id" value="@task.TaskId" />
+                                                <button type="submit" class="btn">
+                                                    <i class="bi bi-trash3 fs-4 text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            document.querySelector('#checkboxForm-@task.TaskId input[type="checkbox"]').addEventListener('change', function () {
+                                document.getElementById('checkboxForm-@task.TaskId').submit();
+                            });
+                        </script>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-12">
+        <div class="card-group">
+            <div class="row row-cols-2 g-1 ms-0 w-100 ps-1 pe-1" style="height: fit-content;">
+                @if (Model.Notes != null)
+                {
+                    foreach (var note in Model.Notes)
+                    {
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body row">
+                                    <div class="col-xxl-6 col-7 card-title d-inline-flex align-items-center">
+                                        <div class="ms-2 text-container ">
+                                            <div class="text-container fs-5 fw-bold text-decoration-none">
+                                                <form method="get" asp-page="Notes/Edit">
+                                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                                    <input type="hidden" name="id" value="@note.NoteId" />
+                                                    <button type="submit" class="text-container btn w-100 d-flex justify-content-start p-0 m-0 fs-5 fw-bold text-decoration-none">@note.Title</button>
+                                                </form>
+                                            </div>
+                                            <p class="card-text text-container">
+                                                @note.Content
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xxl-6 col-5 row mx-0">
+                                        @if (Model.CurrentFolderId == null)
+                                        {
+                                            <div class="d-xxl-block d-none col-xxl-6">
+                                                <i class="bi bi-folder fs-3"></i>
+                                                <div class="text-container ms-2">@note?.Folder?.Name</div>
+                                            </div>
+                                        }
+                                        <div class="col-xxl-6 col-12 d-flex align-items-center justify-content-end">
+                                            <form method="get" asp-page="Notes/MoveTo">
+                                                <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                                <input type="hidden" name="id" value="@note.NoteId" />
+                                                <button type="submit" class="btn">
+                                                    <i class="bi bi-trash3 fs-4 text-danger"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

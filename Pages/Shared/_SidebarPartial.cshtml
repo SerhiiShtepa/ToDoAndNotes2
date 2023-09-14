@@ -1,0 +1,101 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using ToDoAndNotes2.Models;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext ApplicationDbContext
+
+@{
+    int? currentFolderId;
+    try
+    {
+        currentFolderId = Convert.ToInt32(ViewData["CurrentFolderId"]);
+    }
+    catch (Exception)
+    {
+        currentFolderId = null;
+    }
+}
+
+@model SidebarData //!!!!
+
+<div class="vertical-nav bg-white active" id="sidebar">
+
+    <div class="d-flex">
+        <a asp-page="/Index" class="d-flex align-items-center mb-3 ms-1 link-dark text-decoration-none fs-1">
+            <i class="bi bi-journal-check me-2"></i>
+            <span class="fs-3 fw-semibold">TD&N</span>
+        </a>
+    </div>
+
+    <ul class="list-unstyled ps-2 mb-0">
+        <li class="mb-1">
+            <button class="btn d-inline-flex collapsed fs-4 w-100" data-bs-toggle="collapse"
+                    data-bs-target="#profile-collapse" aria-expanded="false">
+                <i class="bi bi-person-circle fs-2 me-2"></i>
+                <div class="pt-2">Профіль</div>
+            </button>
+            <div class="collapse fs-4 ms-3" id="profile-collapse">
+                <partial name="_LoginPartial"/>
+            </div>
+        </li>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="mb-1">
+                <a asp-page="/Index" class="btn d-inline-flex fs-4 w-100">
+                    <i class="bi bi-folder fs-2 me-2"></i>
+                    <div class="pt-1">Сховище</div>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a asp-page="/Bin" class="btn d-inline-flex fs-4 w-100">
+                    <i class="bi bi-trash3 fs-2 me-2"></i>
+                    <div class="pt-1">Кошик</div>
+                </a>
+            </li>
+        }
+    </ul>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <!-- new folder -->
+        <div class="ps-2 border-top border-bottom">
+            <div class="btn d-inline-flex fs-4 w-100">
+                <form method="post" asp-page="/Folders/Create" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="btn btn-link p-0">
+                            <i class="bi bi-folder-plus fs-2 me-2"></i>
+                        </button>
+                        <textarea asp-for="Folder.Name" oninput="auto_grow(this)" onfocus="auto_grow(this)" type="textarea"
+                                  class="card-text form-control fs-4 border-0" placeholder="Нова папка" required></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- folder list -->
+        <ul class="list-unstyled scrollable ps-2 pt-2" style="height: 63vh">
+            @foreach (Folder? folder in await ApplicationDbContext.Folders.Where(f => f.OwnerId == UserManager.GetUserId(User) && f.IsDeleted == false).ToListAsync())
+            {
+                <li class="row fs-4 pb-0 pt-0 ps-2">
+                    <div class="d-inline-flex align-items-center">
+                        <button type="button" class="btn p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fs-2 me-2 @(folder.FolderId == currentFolderId ? "bi bi-folder-fill" : "bi bi-folder")"></i>
+                        </button>
+                        <a asp-page="/Index" asp-route-currentFolderId="@folder.FolderId" class="text-dark w-100 p-0 me-2 fs-4 border-0 text-container text-decoration-none">
+                            @folder.Name
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-page="@Url.Page("/Folders/Edit")" asp-route-id="@folder.FolderId" asp-route-returnUrl="@Model.ReturnUrl" type="button" class="dropdown-item">
+                                    Перейменувати
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-page="@Url.Page("/Folders/MoveTo")" asp-page-handler="ToBin" asp-route-id="@folder.FolderId" asp-route-returnUrl="@Model.ReturnUrl" type="button" class="dropdown-item">До кошику</a>
+                            </li>
+                        </ul>
+                    </div>                  
+                </li>
+            }
+        </ul>
+    }
+</div>

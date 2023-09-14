@@ -1,0 +1,151 @@
+﻿@page
+@model BinModel
+@{
+    ViewData["Title"] = "Bin";
+}
+@section ButtonsRow {
+
+}
+
+@section Sidebar {
+    @await Html.PartialAsync("_SidebarPartial", Model.SidebarData)
+}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-0" style="height: fit-content;">
+    @if (Model.Folders != null)
+    {
+        foreach (var folder in Model.Folders)
+        {
+            <div class="col">
+                <div class="card">
+                    <div class="card-body row">
+                        <div class="col-xxl-6 col-7 card-title d-inline-flex align-items-center">
+                            <div>
+                                <i class="bi bi-folder fs-2"></i>
+                            </div>
+                            <div class="ms-2 text-container ">
+                                <div class="text-container fs-5 fw-bold text-decoration-none">
+                                    @folder.Name
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-5 row mx-0">
+                            <div class="col-12 d-flex align-items-center justify-content-end">
+                                <form method="post" asp-page="Folders/MoveTo" asp-page-handler="Restore">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@folder.FolderId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
+                                    </button>
+                                </form>
+                                <form method="get" asp-page="Folders/Delete">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@folder.FolderId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-trash3 fs-4 text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        }
+    }
+    @if (Model.Tasks != null)
+    {
+        foreach (var task in Model.Tasks)
+        {
+            <div class="col">
+                <div class="card" style="background-color: lightblue">
+                    <div class="card-body row">
+                        <div class="col-xxl-6 col-7 ard-title d-inline-flex align-items-center">
+                            <div>
+                                <input asp-for="@task.IsCompleted" class="form-check-input fs-2 bg-secondary" type="checkbox" onclick="return false;">
+                            </div>
+                            <div class="ms-2 text-container">
+                                <div class="text-container fs-5 fw-bold text-decoration-none">
+                                    @task.Title
+                                </div>
+                                <p class="card-text text-container">
+                                    @task.Description
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-5 row mx-0">
+                            <div class="d-xxl-block d-none col-xxl-6">
+                                <i class="bi bi-folder fs-3"></i>
+                                <div class="text-container ms-2">@task?.Folder?.Name</div>
+                            </div>
+                            <div class="col-xxl-6 col-12 d-flex align-items-center justify-content-end">
+                                <form method="post" asp-page="Tasks/MoveTo" asp-page-handler="Restore">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@task.TaskId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
+                                    </button>
+                                </form>
+                                <form method="get" asp-page="Tasks/Delete">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@task.TaskId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-trash3 fs-4 text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    @if (Model.Notes != null)
+    {
+        foreach (var note in Model.Notes)
+        {
+            <div class="col">
+                <div class="card" style="background-color: seashell">
+                    <div class="card-body row">
+                        <div class="col-xxl-6 col-7 card-title d-inline-flex align-items-center">
+                            <div class="ms-2 text-container ">
+                                <div class="text-container fs-5 fw-bold text-decoration-none">
+                                    @note.Title
+                                </div>
+                                <p class="card-text text-container">
+                                    @note.Content
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-5 row mx-0">
+                            <div class="d-xxl-block d-none col-xxl-6">
+                                <i class="bi bi-folder fs-3"></i>
+                                <div class="text-container ms-2">@note?.Folder?.Name</div>
+                            </div>
+                            <div class="col-xxl-6 col-12 d-flex align-items-center justify-content-end">
+                                <form method="post" asp-page="Notes/MoveTo" asp-page-handler="Restore">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@note.NoteId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-arrow-up-circle fs-4 text-success"></i>
+                                    </button>
+                                </form>
+                                <form method="get" asp-page="Notes/Delete">
+                                    <input type="hidden" class="returnUrlInput" name="returnUrl" />
+                                    <input type="hidden" name="id" value="@note.NoteId" />
+                                    <button type="submit" class="btn">
+                                        <i class="bi bi-trash3 fs-4 text-danger"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

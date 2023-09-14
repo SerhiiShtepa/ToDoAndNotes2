@@ -1,0 +1,8 @@
+﻿namespace ToDoAndNotes2.Services
+{
+    public class AuthMessageSenderOptions
+    {
+        public string? SendGridKey { get; set; }
+        public string? SendGridFromEmail { get; set; }
+    }
+}

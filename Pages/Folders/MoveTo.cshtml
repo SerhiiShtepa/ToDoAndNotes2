@@ -1,0 +1,31 @@
+﻿@page
+@model ToDoAndNotes2.Pages.Folders.MoveToModel
+
+@{
+    ViewData["Title"] = "Move folder";
+}
+
+<h1>Перемістити папку та її зміст до кошику?</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-folder fs-2"></i>
+            <div class="ms-2 fs-4">@Model.Folder.Name</div>
+        </div>
+
+        <form method="post" asp-page-handler="ToBin" asp-route-ReturnUrl="@Model.ReturnUrl">
+            <input type="hidden" asp-for="Folder.FolderId" />
+            <input type="hidden" asp-for="Folder.OwnerId" />
+            <input type="hidden" asp-for="Folder.IsDeleted" />
+            <input type="hidden" asp-for="Folder.Name" />
+            @await Html.PartialAsync("_OkCancelPartial")
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

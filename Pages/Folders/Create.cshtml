@@ -1,0 +1,32 @@
+﻿@page
+@model ToDoAndNotes2.Pages.Folders.CreateModel
+
+@{
+    ViewData["Title"] = "Create folder";
+}
+
+<h1>Створення нової папки</h1>
+<hr />
+<div>
+    <div class="col-md-6">
+        <form method="post" asp-route-ReturnUrl="@Model.ReturnUrl">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Folder.FolderId" />
+            <input type="hidden" asp-for="Folder.OwnerId" />
+            <input type="hidden" asp-for="Folder.IsDeleted" />
+            <div class="d-flex align-items-center">
+                <label for="folderName"><i class="bi bi-folder fs-2"></i></label>
+                <input id="folderName" asp-for="Folder.Name" class="ms-2 form-control fs-4" />
+                <span asp-validation-for="Folder.Name" class="ms-3 text-danger"></span>
+            </div>
+            @await Html.PartialAsync("_OkCancelPartial")
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

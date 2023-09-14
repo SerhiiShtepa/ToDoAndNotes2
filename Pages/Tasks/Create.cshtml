@@ -1,0 +1,47 @@
+﻿@page
+@model Tasks.CreateModel
+
+@{
+    ViewData["Title"] = "Create task";
+}
+<h1>Нова задача</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Task.IsDeleted" />
+            <input type="hidden" asp-for="Task.CreatedAt" />
+
+            <div class="form-group d-flex ps-3 pe-3">
+                <label type="button" class="btn p-0" for="selectFolder">
+                    <i class="bi bi-folder fs-2 me-2"></i>
+                </label>
+                <select id="selectFolder" asp-for="Task.FolderId" asp-items="ViewBag.FolderId" class="form-control fs-4"></select>
+            </div>
+
+            <div class="d-flex ps-3 pe-3">
+                <div class="fs-2 mt-1">
+                    <input type="checkbox" asp-for="Task.IsCompleted" class="form-check-input" />
+                </div>
+                <div class="ms-2 w-100">
+                    <textarea asp-for="Task.Title" oninput="auto_grow(this)" type="textarea"
+                              class="card-text form-control fs-4 mt-1" placeholder="Назва ..."></textarea>
+                    <span asp-validation-for="Task.Title" class="text-danger"></span>
+
+                    <textarea asp-for="Task.Description" oninput="auto_grow(this)" type="textarea"
+                              class="card-text form-control fs-5 mt-1" placeholder="Опис ..."></textarea>
+                    <span asp-validation-for="Task.Description" class="text-danger"></span>
+
+                    @await Html.PartialAsync("_OkCancelPartial")
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

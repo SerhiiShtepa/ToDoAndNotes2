@@ -1,0 +1,82 @@
+﻿.vertical-nav {
+    min-width: 17rem;
+    width: 17rem;
+    height: 100vh;
+    position: fixed;
+    transition: all 0.4s;
+}
+
+.page-content {
+    width: calc(100% - 17rem);
+    margin-left: 17rem;
+    transition: all 0.4s;
+}
+
+/* for toggle behavior */
+#sidebar.active {
+    margin-left: -17rem;
+}
+
+#content.active {
+    width: 100%;
+    margin: 0;
+}
+
+/* when screen smaller */
+@media (max-width: 768px) {
+
+    /* + classes NOT active (can see sidebar but not content)*/
+    #sidebar {
+        margin-left: 0;
+    }
+
+    #content {
+        margin-left: 17rem;
+        width: calc(100% - 17rem);
+    }
+
+        /* hide content */
+        #content .mobileDataHide {
+            display: none;
+        }
+
+    /* + classes ACTIVE (can't see sidebar but can see content) */
+    #sidebar.active {
+        margin-left: -17rem;
+    }
+
+    /* show content */
+    #content.active .mobileDataHide {
+        display: block;
+    }
+
+    #content.active {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+textarea {
+    resize: none;
+    overflow: hidden;
+    height: 1em;
+    max-height: auto;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+    .scrollable::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
